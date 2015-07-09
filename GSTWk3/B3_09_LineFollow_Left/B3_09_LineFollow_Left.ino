@@ -34,8 +34,8 @@ const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior
 // Bump behavior
-const byte FORWARD_SPEED = 100;   // Define normal speeds
-const byte BACKWARD_SPEED = 100;  // and backup/turn speed
+const byte FORWARD_SPEED = 75;   // Define normal speeds
+const byte BACKWARD_SPEED = 75;  // and backup/turn speed
 const int  TURN_DURATION = 600;   // Turn length in milliseconds
 
 // Sonic sensor
@@ -44,9 +44,9 @@ const int MAX_SONIC_DISTANCE = 500;      // cm, optional, 500 cm is default
 
 // Line Following
 const byte FOLLOW_LEFT_SIDE = 1;
-const float HI_LIGHT = 0.80;     // Keep the BRIGHT side of the line ABOVE this
+const float HI_LIGHT = 0.70;     // Keep the BRIGHT side of the line ABOVE this
 // fraction of the Maximum read by that sensor
-const float LO_LIGHT = 0.20;     // Keep the DARK side of the line BELOW this
+const float LO_LIGHT = 0.30;     // Keep the DARK side of the line BELOW this
 // fraction of the Maximum read by that sensor
 
 // Define 'ports' for motors.
@@ -100,6 +100,7 @@ void setup(void) {
         target values to keep the sensors at.
   */
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
+  delay(50);
   while (digitalRead(RIGHT_BUMP_PIN) == LOW) { // Get high light values until the pin
     // is no longer grounded
     leftIR = analogRead(LEFT_IR_PIN);
@@ -116,6 +117,7 @@ void setup(void) {
   }
   /*Do the same, but over a dark target */
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
+  delay(50);
   while (digitalRead(RIGHT_BUMP_PIN) == LOW) {   // Get dark light values until the pin
     // is no longer grounded
     leftIR = analogRead(LEFT_IR_PIN);
@@ -156,9 +158,11 @@ void loop() {
 
   if (leftIR < brightLeft ) {          // Too far right, stop left motor
     motorLeft->setSpeed(20);
+    Serial.print("Left Speed SLOW, Right FAST");
   }
   else if (rightIR > darkRight) {
     motorRight->setSpeed(20);       // Too far right, stop RIGHT motor
+    Serial.println("Left Speed FAST, Right SLOW");
   }
   motorLeft->run(FORWARD);
   motorRight->run(FORWARD);
