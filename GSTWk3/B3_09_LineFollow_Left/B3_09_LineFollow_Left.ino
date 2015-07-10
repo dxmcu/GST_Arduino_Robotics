@@ -1,4 +1,4 @@
-/* B3_09_LineFollow_Left.ino
+              /* B3_09_LineFollow_Left.ino
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    forward, following a black line, but pretty inefficiently.
    When a whisker bump sensor on either side hits something,
@@ -44,10 +44,10 @@ const int MAX_SONIC_DISTANCE = 500;      // cm, optional, 500 cm is default
 
 // Line Following
 const byte FOLLOW_LEFT_SIDE = 1;
-const float HI_LIGHT = 0.70;     // Keep the BRIGHT side of the line ABOVE this
-// fraction of the Maximum read by that sensor
-const float LO_LIGHT = 0.30;     // Keep the DARK side of the line BELOW this
-// fraction of the Maximum read by that sensor
+const float HI_LIGHT = 0.30;     // Keep the BRIGHT side of the line ABOVE the 
+// maximum minus this fraction of the range read by that sensor
+const float LO_LIGHT = 0.30;     // Keep the DARK side of the line BELOW the 
+// minumum PLUS this fraction of the range read by that sensor
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -100,7 +100,7 @@ void setup(void) {
         target values to keep the sensors at.
   */
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
-  delay(50);
+  delay(50);   // For Debump
   while (digitalRead(RIGHT_BUMP_PIN) == LOW) { // Get high light values until the pin
     // is no longer grounded
     leftIR = analogRead(LEFT_IR_PIN);
@@ -117,7 +117,7 @@ void setup(void) {
   }
   /*Do the same, but over a dark target */
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
-  delay(50);
+  delay(50);    // For Debump
   while (digitalRead(RIGHT_BUMP_PIN) == LOW) {   // Get dark light values until the pin
     // is no longer grounded
     leftIR = analogRead(LEFT_IR_PIN);
@@ -134,7 +134,7 @@ void setup(void) {
   }
   leftRange = maxLeftIR - minLeftIR;
   rightRange = maxRightIR - minRightIR;
-  brightLeft = maxLeftIR - ((1.0 - HI_LIGHT) * leftRange);
+  brightLeft = maxLeftIR - (HI_LIGHT * leftRange);
   darkRight = minRightIR + (LO_LIGHT * rightRange);
 
   while ( digitalRead(LEFT_BUMP_PIN) == HIGH) {} // Pause until you trigger the left bump switch
@@ -158,11 +158,11 @@ void loop() {
 
   if (leftIR < brightLeft ) {          // Too far right, stop left motor
     motorLeft->setSpeed(20);
-    Serial.print("Left Speed SLOW, Right FAST");
+  //  Serial.print("Left Speed SLOW, Right FAST");
   }
   else if (rightIR > darkRight) {
     motorRight->setSpeed(20);       // Too far right, stop RIGHT motor
-    Serial.println("Left Speed FAST, Right SLOW");
+  //  Serial.println("Left Speed FAST, Right SLOW");
   }
   motorLeft->run(FORWARD);
   motorRight->run(FORWARD);
