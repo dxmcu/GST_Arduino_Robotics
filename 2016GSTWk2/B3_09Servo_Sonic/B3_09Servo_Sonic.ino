@@ -1,4 +1,4 @@
-/* B3_08B_Sonic.ino
+/* B3_09_Servo_Sonic.ino
 
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    forward.   When within 10 inches of something, turn servos to find clearest path
@@ -14,7 +14,7 @@
    ---->  http://www.adafruit.com/products/1438
 
    Programmer: Dave Eslinger; June 13, 2015
-   Revisions: 
+   Revisions:   Added sonic sensors on servos, June 23, 2016.
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h> 
@@ -169,7 +169,8 @@ void loop(){
 		panServo.write(i);
 		pingDist = max(Distance_inches(sonic.ping()),0.1);
 		if(pingDist > maxDist) {
-			newDirection = i - 90;
+			//newDirection = i - 90;
+      newDirection = map(i,0, 180, -90, 90);
 			maxDist = pingDist;
 			String outMsg = String("New maximum distance is " + 
 				String(pingDist) + " at angle " + String(newDirection));
