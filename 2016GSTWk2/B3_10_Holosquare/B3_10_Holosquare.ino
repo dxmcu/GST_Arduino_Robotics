@@ -27,7 +27,7 @@ const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
 const byte RIGHT_MOTOR_PORT = 1;
-const byte BACK_MOTOR_PORT = 4;
+const byte BACK_MOTOR_PORT = 2;
 // Create pointers to motor control objects
 Adafruit_DCMotor *motorLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);

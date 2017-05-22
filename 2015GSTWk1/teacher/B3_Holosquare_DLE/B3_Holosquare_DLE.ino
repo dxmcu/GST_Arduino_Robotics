@@ -60,7 +60,7 @@ void loop(void){
 
   // Autonomous loop for driving in a square
   for ( byte leg = 1; leg < 6; leg++ ) {
-    duration = 2;
+    duration = .5;
     magnitude = 50;
     //    brake = 0; // No braking
     switch (leg) {
@@ -78,7 +78,7 @@ void loop(void){
       break;
     default: // Stop and pause at starting point
       magnitude = 0;
-      duration = 4;
+      duration = 1;
       direction = 0;
       //      brake = 1; // hard stop
     }
