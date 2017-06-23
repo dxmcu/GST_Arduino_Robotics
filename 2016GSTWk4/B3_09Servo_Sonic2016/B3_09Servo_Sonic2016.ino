@@ -19,7 +19,7 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
-#include <breadboardbot.h>
+#include <BreadBoardBot.h>
 #include <NewPing.h>
 #include <Servo.h>
 
