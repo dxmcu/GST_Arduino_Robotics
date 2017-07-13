@@ -24,8 +24,6 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // IO Pins used
 const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
-const byte SONIC_TRIGGER_PIN = 50;
-const byte SONIC_ECHO_PIN = 51;
 const byte LEFT_IR_LED_PIN = 43;
 const byte LEFT_IR_PIN = A11;
 const byte RIGHT_IR_LED_PIN = 42;
@@ -33,13 +31,9 @@ const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior
 // Bump behavior
-const byte FORWARD_SPEED = 75;   // Define normal speeds
+const byte FORWARD_SPEED = 120;   // Define normal speeds
 const byte BACKWARD_SPEED = 100;  // and backup/turn speed
 const int  TURN_DURATION = 600;   // Turn length in milliseconds
-
-// Sonic sensor
-const float TARGET_DISTANCE_INCHES = 10;
-const int MAX_SONIC_DISTANCE = 5000;      // cm, optional, 500 cm is default
 
 // Line Following
 const byte FOLLOW_LEFT_SIDE = 1;
@@ -54,10 +48,6 @@ const byte RIGHT_MOTOR_PORT = 1;
 // Create pointers to motor control objects
 Adafruit_DCMotor *motorLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
-
-/* Define new untrasonic sensor with trigger & echo pins and
-   the maximum distance to be sensed. */
-//NewPing sonic(SONIC_TRIGGER_PIN, SONIC_ECHO_PIN, MAX_SONIC_DISTANCE);
 
 /* Global Variables */
 int leftIR;
@@ -105,32 +95,16 @@ void setup(void) {
     leftIR = analogRead(LEFT_IR_PIN);
     rightIR = analogRead(RIGHT_IR_PIN);
     Serial.print(leftIR);
-    Serial.print("  = leftIR, Calibrate LIGHT rightIR = ");
+    Serial.print("  = leftIR, Calibrate LIGHT & Dark rightIR = ");
     Serial.println(rightIR);
     if ( leftIR > maxLeftIR ) {
       maxLeftIR = leftIR;
     }
+    if ( leftIR < minLeftIR ) {
+      minLeftIR = leftIR;
+    }
     if ( rightIR > maxRightIR ) {
       maxRightIR = rightIR;
-    }
-    if ( leftIR < minLeftIR ) {
-      minLeftIR = leftIR;
-    }
-    if ( rightIR < minRightIR ) {
-      minRightIR = rightIR;
-    }
-  }
-
-  while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
-  while (digitalRead(RIGHT_BUMP_PIN) == LOW) {   // Get dark light values until the pin
-    // is no longer grounded
-    leftIR = analogRead(LEFT_IR_PIN);
-    rightIR = analogRead(RIGHT_IR_PIN);
-    Serial.print(leftIR);
-    Serial.print("  = leftIR, Calibrate DARK  rightIR = ");
-    Serial.println(rightIR);
-    if ( leftIR < minLeftIR ) {
-      minLeftIR = leftIR;
     }
     if ( rightIR < minRightIR ) {
       minRightIR = rightIR;

@@ -15,6 +15,7 @@
 #include <Adafruit_MotorShield.h>
 #include <math.h>
 #include <BreadBoardBot.h>
+//#include <NewPing.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -33,7 +34,7 @@ const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior
 // Bump behavior
-const byte FORWARD_SPEED = 75;   // Define normal speeds
+const byte FORWARD_SPEED = 120;   // Define normal speeds
 const byte BACKWARD_SPEED = 100;  // and backup/turn speed
 const int  TURN_DURATION = 600;   // Turn length in milliseconds
 
@@ -105,37 +106,38 @@ void setup(void) {
     leftIR = analogRead(LEFT_IR_PIN);
     rightIR = analogRead(RIGHT_IR_PIN);
     Serial.print(leftIR);
-    Serial.print("  = leftIR, Calibrate LIGHT rightIR = ");
+    Serial.print("  = leftIR, Calibrate LIGHT & Dark rightIR = ");
     Serial.println(rightIR);
     if ( leftIR > maxLeftIR ) {
       maxLeftIR = leftIR;
     }
+    if ( leftIR < minLeftIR ) {
+      minLeftIR = leftIR;
+    }
     if ( rightIR > maxRightIR ) {
       maxRightIR = rightIR;
     }
-    if ( leftIR < minLeftIR ) {
-      minLeftIR = leftIR;
-    }
     if ( rightIR < minRightIR ) {
       minRightIR = rightIR;
     }
   }
+//  while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
+//  while (digitalRead(RIGHT_BUMP_PIN) == LOW) {   // Get dark light values until the pin
+//    // is no longer grounded
+//    leftIR = analogRead(LEFT_IR_PIN);
+//    rightIR = analogRead(RIGHT_IR_PIN);
+//    Serial.print(leftIR);
+//    Serial.print("  = leftIR, Calibrate DARK  rightIR = ");
+//    Serial.println(rightIR);
+//    if ( leftIR < minLeftIR ) {
+//      minLeftIR = leftIR;
+//    }
+//    if ( rightIR < minRightIR ) {
+//      minRightIR = rightIR;
+//    }
+//  }
 
-  while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
-  while (digitalRead(RIGHT_BUMP_PIN) == LOW) {   // Get dark light values until the pin
-    // is no longer grounded
-    leftIR = analogRead(LEFT_IR_PIN);
-    rightIR = analogRead(RIGHT_IR_PIN);
-    Serial.print(leftIR);
-    Serial.print("  = leftIR, Calibrate DARK  rightIR = ");
-    Serial.println(rightIR);
-    if ( leftIR < minLeftIR ) {
-      minLeftIR = leftIR;
-    }
-    if ( rightIR < minRightIR ) {
-      minRightIR = rightIR;
-    }
-  }
+//
   leftRange = maxLeftIR - minLeftIR;
   rightRange = maxRightIR - minRightIR;
   brightLeft = maxLeftIR - ((1.0 - HI_LIGHT) * leftRange);

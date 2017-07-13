@@ -53,12 +53,12 @@ void loop(void){
   motorLeft->run(RELEASE);   // Now stop the motors
   motorRight->run(RELEASE);  // However, this just coasts
 /* Here is a braking method: run backwards a bit */
-//  motorLeft->run(BACKWARD);  // Run backwards for a brief period
-//  motorRight->run(BACKWARD);
-//  delay(50);
-//
-//  motorLeft->run(RELEASE);     // and then stop the motors
-//  motorRight->run(RELEASE);   
+  motorLeft->run(BACKWARD);  // Run backwards for a brief period
+  motorRight->run(BACKWARD);
+  delay(50);
+
+  motorLeft->run(RELEASE);     // and then stop the motors
+  motorRight->run(RELEASE);   
 /* End of backwards section */
 /* Another way to do the same braking technique, but with a
      function allStop: */
@@ -76,8 +76,8 @@ void loop(void){
 //    motorRight->run(BACKWARD);
 //  }
 //  else {
-//    motorLeft->run(BACKWARD);
-//    motorRight->run(BACKWARD);
+//    motorLeft->run(FORWARD);
+//    motorRight->run(FORWARD);
 //  }
 //  delay(50);
 //  motorLeft->run(RELEASE);
