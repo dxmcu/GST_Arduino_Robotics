@@ -21,7 +21,7 @@ JUST FOR TESTING sonar.ping_median
 #include <Wire.h>
 #include <Adafruit_MotorShield.h> 
 #include <math.h> 
-#include <breadboardbot.h>
+#include <BreadBoardBot.h>
 #include <NewPing.h>
 #include <Servo.h>
 
@@ -98,13 +98,16 @@ void loop(){
   Serial.print(sonic.ping_in());
   Serial.print(" inches, cm = ");
   Serial.print(sonic.ping_cm());
-  Serial.print(", actual ping time (ms) = ");
-  int ping_milli = sonic.ping();
+  Serial.print(", ping time (ms) = ");
+  // int ping_milli = sonic.ping();
+  int ping_milli = sonic.ping_median();
   Serial.print(ping_milli);
   Serial.print(", real inches = ");
   Serial.print(Distance_inches(ping_milli));
   Serial.print(", real cm = ");
-  Serial.println(Distance_cm(ping_milli));
+  Serial.print(Distance_cm(ping_milli));
+  Serial.print(", med ping = ");
+  Serial.println(sonic.ping_median(7,500));
   delay(100); // Just to slow things down
 
 /*   for (int i=0; i<=170; i+=5) {
@@ -127,6 +130,8 @@ void loop(){
 
   // delay(1000);
 
+//Comment everything out just to test different ping approaches
+/* 
 //   Assuming no switches closed initially.  Drive forward:
   motorLeft->setSpeed(FORWARD_SPEED);
   motorRight->setSpeed(FORWARD_SPEED);
@@ -141,10 +146,10 @@ void loop(){
     // Serial.println(String(pingDist));
   }
   
-/*   If you got here, one of the bump switches was closed or B^3 is too
-     close to something straight ahead */
+  // If you got here, one of the bump switches was closed or B^3 is too
+  // close to something straight ahead
 
-  /* First check the LEFT sensor: */
+  // First check the LEFT sensor:
   if(! digitalRead(LEFT_BUMP_PIN)) { // the LEFT side switch was bumped
     motorLeft->setSpeed(BACKWARD_SPEED/3); // Slowly back up and turn to right
     motorRight->setSpeed(BACKWARD_SPEED);  
@@ -154,7 +159,7 @@ void loop(){
     motorLeft->run(RELEASE);               // Then stop power to the motors
     motorRight->run(RELEASE);              // and move to next section of code
   }
-  /* Then check the right sensor: */
+  // Then check the right sensor:
   else if(! digitalRead(RIGHT_BUMP_PIN)) { // the RIGHT side switch was bumped
     motorLeft->setSpeed(BACKWARD_SPEED); // Slowly back up and turn to left
     motorRight->setSpeed(BACKWARD_SPEED/3);  
@@ -164,10 +169,10 @@ void loop(){
     motorLeft->run(RELEASE);               // Then stop power to the motors
     motorRight->run(RELEASE);              // and move to next section of code
   }
-  /* It must have been the sonar sensor */
+  // It must have been the sonar sensor
   else {              
-    /* motorLeft->run(RELEASE);   // So stop power to the motors
-    motorRight->run(RELEASE);  // and move to next section of code */
+    motorLeft->run(RELEASE);   // So stop power to the motors
+    motorRight->run(RELEASE);  // and move to next section of code
     motorLeft->run(BACKWARD);   // So REVERSE power to the motors
     motorRight->run(BACKWARD);  // to BRIEFLY APPLY a brake
     delay(50);
@@ -190,7 +195,7 @@ void loop(){
 		}
 		delay(50);
 	}
-/* 	 delay(1000);
+	 delay(1000);
 	for (int i=160; i>=20; i-=5) {
 		panServo.write(i);
 		// pingDist = max(Distance_inches(sonic.ping()),0.1);
@@ -202,11 +207,11 @@ void loop(){
 				String(pingDist) + " at angle " + String(newDirection));
 			Serial.println(outMsg);		}
 		delay(50); 
-	}*/
-	/* Now turn to the new maximumum direction! */
+	}
+//	Now turn to the new maximumum direction!
 	panServo.write(90);
 	spin(newDirection,75,motorLeft,motorRight);
-  }
+  } */
 
   /*That is all!  Now go back to the beginning of the loop and 
      drive straight ahead until somehting is bumped. */
