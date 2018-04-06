@@ -108,7 +108,7 @@ void loop(){
   Serial.print(Distance_cm(ping_milli));
   Serial.print(", med ping = ");
   Serial.println(sonic.ping_median(7,500));
-  delay(100); // Just to slow things down
+  // delay(100); // Just to slow things down
 
 /*   for (int i=0; i<=170; i+=5) {
     panServo.write(i);
