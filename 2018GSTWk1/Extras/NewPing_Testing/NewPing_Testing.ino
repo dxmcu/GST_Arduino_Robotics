@@ -20,6 +20,20 @@
 #include <NewPing.h>
 #include <Servo.h>
 
+#if defined PING_MEDIAN_DELAY
+	#undef PING_MEDIAN_DELAY
+	#define PING_MEDIAN_DELAY 2000
+#else
+	#define PING_MEDIAN_DELAY 2000
+#endif
+	
+#if defined NO_ECHO
+	#undef NO_ECHO
+	#define NO_ECHO 65535               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
+#else
+	#define NO_ECHO 65535
+#endif
+
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 
@@ -62,6 +76,7 @@ const byte TILTSERVOPIN = 9; // Servo 2
 
 float pingDist; // define variable to use for distance measurements
 String msg="";
+unsigned long thisMean;
 
 /* This code is based on the NewPing::ping_median function found in the 
 	NewPing library.
@@ -70,7 +85,7 @@ String msg="";
 	Note that NO_ECHO is defined in NewPing.h
 	*/
 unsigned long ping_mean(uint8_t it=5, unsigned int max_cm_distance=500) {
-	unsigned int uS[it], last;
+	unsigned int last;
 	uint8_t  i = 0;
 	unsigned long sum_pings, t;
 
@@ -78,18 +93,19 @@ unsigned long ping_mean(uint8_t it=5, unsigned int max_cm_distance=500) {
 		t = micros();                  // Start ping timestamp.
 		last = sonic.ping(max_cm_distance);  // Send ping.
 
-		if (last != NO_ECHO) {         // Ping in range, include as part of sum.
+		if (last != NO_ECHO && last != 65535) {         // Ping in range, include as part of sum.
 			if (i > 0) {               // Don't start sort till second ping.
 				sum_pings = sum_pings + last;     // Add latest ping to sum
 			} else sum_pings = last;   // Initialize sum_pings with first ping.
 			i++;                       // Move to next ping.
 		}
 		// else it--;                 // Ping out of range, skip and don't include as part of sum.
-		Serial.println(String("i, ping, sum_pings = " + String(i) + ", " + String(last) + ", " + String(sum_pings)));
+		// Serial.println(String("i, ping, sum_pings = " + String(i) + ", " + String(last) + ", " + String(sum_pings)));
 
-		if (i < it && micros() - t < PING_MEDIAN_DELAY)
+		if (i < it && micros() - t < PING_MEDIAN_DELAY) {
+			// Serial.println("Delay in ping_mean");
 			delay((PING_MEDIAN_DELAY + t - micros()) / 1000); // Millisecond delay between pings.
-
+		}
 	}
 	return (sum_pings/it); // Return the ping distance mean.
 }
@@ -138,26 +154,36 @@ void loop(){
  */	  // delay(100); // Just to slow things down
  
  
-	// Serial.println("10 lines with sonic.ping()\r\n");
-	// for (int i=1; i<=10; i++) {
-		// for (int j=1; j<10; j++) {
-			// msg += String(String(sonic.ping()) + "\t");
-		// }
-		// Serial.println(String(msg + String(sonic.ping())));
-		// msg = "";
-	// }
-
-	// Serial.println("10 lines with sonic.ping_median()\r\n");
-	// for (int i=1; i<=10; i++) {
-		// for (int j=1; j<10; j++) {
-			// msg += String(String(ping_mean(5,200)) + "\t");
-		// }
-		// Serial.println(String(msg + String(ping_mean(5,200))));
-		// msg = "";
-	// }
-
-	for (int i = 1; i <=5; i++) {
-		Serial.println(String("Ping Mean is " + String(ping_mean(5,200))));
+	msg = "\r\n10 lines with sonic.ping()\r\n";
+	for (int i=1; i<=10; i++) {
+		for (int j=1; j<10; j++) {
+			msg += String(String(sonic.ping()) + "\t");
+		}
+		Serial.println(String(msg + String(sonic.ping())));
+		msg = "";
 	}
+
+	msg = "\r\n10 lines with sonic.ping_median()\r\n";
+	for (int i=1; i<=10; i++) {
+		for (int j=1; j<10; j++) {
+			msg += String(String(sonic.ping_median(5,200)) + "\t");
+		}
+		Serial.println(String(msg + String(sonic.ping_median(5,200))));
+		msg = "";
+	}
+
+	msg = "\r\n10 lines with ping_mean()\r\n";
+	for (int i=1; i<=10; i++) {
+		for (int j=1; j<10; j++) {
+			msg += String(String(ping_mean(5,200)) + "\t");
+		}
+		Serial.println(String(msg + String(ping_mean(5,200))));
+		msg = "";
+	}
+
+	// for (int i = 1; i <=5; i++) {
+		// thisMean = ping_mean(3,500);
+		// Serial.println(String("Ping Mean is " + String(thisMean) + ", Dist is " + String(thisMean/ US_ROUNDTRIP_IN)));
+	// }
 	while(digitalRead(RIGHT_BUMP_PIN)) {}  //Stop after going through the loop once and wait for right bump switch	
 }
