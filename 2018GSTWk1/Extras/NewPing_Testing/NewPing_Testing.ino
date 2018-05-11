@@ -22,9 +22,9 @@
 
 #if defined PING_MEDIAN_DELAY
     #undef PING_MEDIAN_DELAY
-    #define PING_MEDIAN_DELAY 29000
+    #define PING_MEDIAN_DELAY 23000
 #else
-    #define PING_MEDIAN_DELAY 29000
+    #define PING_MEDIAN_DELAY 23000
 #endif
     
 #if defined NO_ECHO
