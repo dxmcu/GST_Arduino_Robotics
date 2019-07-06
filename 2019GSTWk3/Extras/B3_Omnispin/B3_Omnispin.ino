@@ -27,26 +27,26 @@ const byte LEFT_MOTOR_PORT = 3;
 const byte RIGHT_MOTOR_PORT = 1;
 const byte BACK_MOTOR_PORT = 2;
 // Create pointers to motor control objects
-Adafruit_DCMotor *motorLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
-Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
-Adafruit_DCMotor *motorBack = AFMS.getMotor(BACK_MOTOR_PORT);
+Adafruit_DCMotor *mLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
+Adafruit_DCMotor *mRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
+Adafruit_DCMotor *mBack = AFMS.getMotor(BACK_MOTOR_PORT);
 
 // Define global variables
 float direction;       // Velocity Vector Angle (DEGREES) from forward to drive
 float magnitude;       // Magnitude (0-100) of movement vector in given direction
 float duration;        // Duration to drive at given velocity vector
 
-byte motorLeftdir;     // Clockwise or Counter clockwise for the 3 wheels
-byte motorBackdir;
-byte motorRightdir;
+byte mLeftdir;     // Clockwise or Counter clockwise for the 3 wheels
+byte mBackdir;
+byte mRightdir;
 
 void setup(void) {
   Serial.begin(9600);  //Begin serial communcation
   AFMS.begin();  // create with the default frequency 1.6KHz
   // Turn off all motors
-  motorLeft->run(RELEASE);
-  motorBack->run(RELEASE);
-  motorRight->run(RELEASE);
+  mLeft->run(RELEASE);
+  mBack->run(RELEASE);
+  mRight->run(RELEASE);
   /*Set up Bump Pins with Arduino internal pullup resistors
   This will make them always high unless a bump switch is hit,
   which will make a connection to ground and they will read low. */
@@ -76,22 +76,22 @@ void loop(void) {
       case 1: // Move forward 45 degrees right
       Serial.println("Forward 45 degrees right");
       direction = 45.;
-      omnidrive(direction, magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 2: // Move forward 45 degrees left
       Serial.println("Forward 45 degrees left");
       direction = 90.;
-      omnidrive(direction, magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 3: // Move backward
       Serial.println("Back");
       direction = 180.;
-      omnidrive(direction, magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 4: // Move left
       Serial.println("Left");
       direction = -90.;
-      omnidrive(direction, magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 5: // Spin clockwise for 2 seconds
       Serial.println("Spin for 2 seconds");
@@ -99,7 +99,7 @@ void loop(void) {
       duration = 2;
       direction = 0;
       brake = true; // hard stop
-      omnidrive(magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      odrive(magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 6: // Spin counterclockwise for 2 seconds
       Serial.println("Spin for 2 seconds");
@@ -107,7 +107,7 @@ void loop(void) {
       duration = 2;
       direction = 0;
       brake = true; // hard stop
-      omnispin(magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       default: // Stop and pause for 4 seconds at starting point
       Serial.println("Spin for 2 seconds");
@@ -115,9 +115,9 @@ void loop(void) {
       duration = 2;
       direction = 0;
       brake = true; // hard stop
-      omnidrive(magnitude, duration, brake, motorLeft, motorRight, motorBack);
+      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
     }
-    // omnidrive(magnitude, duration, brake, motorLeft, motorRight, motorBack);
+    // odrive(magnitude, duration, brake, mLeft, mRight, mBack);
 
   }
   // Loop complete, so stop until LEFT bumper triggered and released, then rerun
