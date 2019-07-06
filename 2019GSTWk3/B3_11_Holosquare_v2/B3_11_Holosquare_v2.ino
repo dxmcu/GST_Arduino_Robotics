@@ -46,6 +46,7 @@ byte motorBackdir;
 byte motorRightdir;
 
 void setup(void) {
+	Serial.begin(9600);  //Begin serial communcation
 	AFMS.begin();  // create with the default frequency 1.6KHz
 	// Turn off all motors
 	motorLeft->run(RELEASE);
@@ -58,8 +59,9 @@ void setup(void) {
   pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);
 // Now wait for the RIGHT bumpsensor to be pressed
 	while(digitalRead(RIGHT_BUMP_PIN)) {};
-	while(!digitalRead(RIGHT_BUMP_PIN)) {};
-	delay(200); // Bump pin triggered and released, just give 0.2 seconds to get hands out of the way.
+	while(digitalRead(RIGHT_BUMP_PIN)!= HIGH) {};
+	delay(600); // Bump pin triggered and released, just give 0.2 seconds to get hands out of the way.
+	Serial.println("Beginning");
 }
 void loop(void) {
 	// Section for taking commands from Serial Input
@@ -72,29 +74,34 @@ void loop(void) {
 
 	/* Autonomous loop for driving in a square */
 	for ( byte leg = 1; leg < 6; leg++ ) {   // 5 times through loop for a square, why?
-		duration = 2000;                          // Constants per leg: Two seconds/leg
+		duration = 1000;                          // Constants per leg: Two seconds/leg
 		magnitude = 150;                        //                    50% max power
 		bool brake = false;                    //                    No braking
 		switch (leg) {
 		case 1: // Move forward
+			Serial.println("Forward");
 			direction = 0.;
 			break;
 		case 2: // Move right
+		Serial.println("Right");
 			direction = 90.;
 			break;
 		case 3: // Move backward
+		Serial.println("Back");
 			direction = 180.;
 			break;
 		case 4: // Move left
+		Serial.println("Left");
 			direction = -90.;
 			break;
 		default: // Stop and pause for 4 seconds at starting point
+		Serial.println("Stop for 4 seconds");
 			magnitude = 0;
 			duration = 4;
 			direction = 0;
 			brake = true; // hard stop
 		}
-		omnidrive(direction, magnitude, duration, brake,
+		odrive(direction, magnitude, duration, brake,
 		motorLeft, motorRight, motorBack);
 
 		/*     if ( duration > 0 ) {
@@ -168,6 +175,6 @@ void loop(void) {
 	// Loop complete, so stop until LEFT bumper triggered and released, then rerun
 	while(digitalRead(LEFT_BUMP_PIN)) {};  // Wait until pushed
 	while(!digitalRead(LEFT_BUMP_PIN)) {}; // and released
-	delay (200);                           // and 0.2 seconds to get out of the way
+	delay (600);                           // and 0.2 seconds to get out of the way
 
 }

@@ -48,6 +48,7 @@ byte motorBackdir;
 byte motorRightdir;
 
 void setup(void) {
+  Serial.begin(9600);  //Begin serial communcation
   AFMS.begin();  // create with the default frequency 1.6KHz
   // Turn off all motors
   motorLeft->run(RELEASE);
