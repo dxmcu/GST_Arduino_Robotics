@@ -6,9 +6,11 @@ Arduino: Arduino Mega 256 v3 Clone
 Motor Shield: Adafruit assembled Motor Shield for Arduino v2
 ---->  http://www.adafruit.com/products/1438
 
-Programmer: Dave Eslinger; 2019, July 5
-
+Programmer: Dave Eslinger; 2019, July 7
 */
+
+NOT WORKING YET!!!!
+
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
@@ -96,7 +98,7 @@ void loop(void) {
       case 5: // Spin clockwise for 2 seconds
       Serial.println("Spin for 2 seconds");
       magnitude = 0;
-      duration = 2;
+      duration = 2000;
       direction = 0;
       brake = true; // hard stop
       odrive(magnitude, duration, brake, mLeft, mRight, mBack);
@@ -104,15 +106,15 @@ void loop(void) {
       case 6: // Spin counterclockwise for 2 seconds
       Serial.println("Spin for 2 seconds");
       magnitude = 0;
-      duration = 2;
+      duration = 2000;
       direction = 0;
       brake = true; // hard stop
       otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
       break;
-      default: // Stop and pause for 4 seconds at starting point
-      Serial.println("Spin for 2 seconds");
+      default: // Stop and pause for 2 seconds
+      Serial.println("DEFAULT: Stop for 2 seconds");
       magnitude = 0;
-      duration = 2;
+      duration = 2000;
       direction = 0;
       brake = true; // hard stop
       otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
@@ -123,5 +125,5 @@ void loop(void) {
   // Loop complete, so stop until LEFT bumper triggered and released, then rerun
   while(digitalRead(LEFT_BUMP_PIN)) {};  // Wait until pushed
   while(!digitalRead(LEFT_BUMP_PIN)) {}; // and released
-  delay (600);                           // and 0.2 seconds to get out of the way
+  delay (600);                           // and 0.6 seconds to get out of the way
 }
