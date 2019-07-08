@@ -140,7 +140,7 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	return;
 }
 
-void odrive(float direction, byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
+void odrive(float direction, byte magnitude, long duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
 	// Define Constants
 	const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for wheel
 	if ( duration > 0 ) {
