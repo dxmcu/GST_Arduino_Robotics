@@ -34,9 +34,9 @@ Adafruit_DCMotor *mRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
 Adafruit_DCMotor *mBack = AFMS.getMotor(BACK_MOTOR_PORT);
 
 // Define global variables
-float direction;       // Velocity Vector Angle (DEGREES) from forward to drive
-float magnitude;       // Magnitude (0-100) of movement vector in given direction
-float duration;        // Duration to drive at given velocity vector
+float direction;       // Velocity Vector Angle (DEGREES) from forward to drive. Positive is to the right = clockwise.
+byte magnitude;       // Magnitude (0-255) of vector in given direction
+long duration;        // Duration (in milliseconds)
 
 byte mLeftdir;     // Clockwise or Counter clockwise for the 3 wheels
 byte mBackdir;
