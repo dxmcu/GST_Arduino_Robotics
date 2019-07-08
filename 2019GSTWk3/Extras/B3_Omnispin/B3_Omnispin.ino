@@ -9,7 +9,7 @@ Motor Shield: Adafruit assembled Motor Shield for Arduino v2
 Programmer: Dave Eslinger; 2019, July 7
 */
 
-NOT WORKING YET!!!!
+// NOT WORKING YET!!!!
 
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -96,18 +96,18 @@ void loop(void) {
       odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 5: // Spin clockwise for 2 seconds
-      Serial.println("Spin for 2 seconds");
-      magnitude = 0;
+      Serial.println("Spin clockwise for 2 seconds");
+      magnitude = 120;
       duration = 2000;
-      direction = 0;
+      direction = 10;
       brake = true; // hard stop
-      odrive(magnitude, duration, brake, mLeft, mRight, mBack);
+      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 6: // Spin counterclockwise for 2 seconds
-      Serial.println("Spin for 2 seconds");
-      magnitude = 0;
+      Serial.println("Spin counterclockwise for 2 seconds");
+      magnitude = 120;
       duration = 2000;
-      direction = 0;
+      direction = -10;
       brake = true; // hard stop
       otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
       break;
