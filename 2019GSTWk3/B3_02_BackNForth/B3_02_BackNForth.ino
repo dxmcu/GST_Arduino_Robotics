@@ -58,7 +58,7 @@ void loop(void){
   
   allStop(BACKWARD);
 
-  while (1);                // What does this do?
+  while (1){};                // What does this do?
 }
 
 void allStop(int direction) {

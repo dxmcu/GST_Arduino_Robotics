@@ -101,7 +101,7 @@ void loop(void) {
       duration = 2000;
       direction = 10;
       brake = true; // hard stop
-      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
+      otimedspin(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 6: // Spin counterclockwise for 2 seconds
       Serial.println("Spin counterclockwise for 2 seconds");
@@ -109,7 +109,7 @@ void loop(void) {
       duration = 2000;
       direction = -10;
       brake = true; // hard stop
-      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
+      otimedspin(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       default: // Stop and pause for 2 seconds
       Serial.println("DEFAULT: Stop for 2 seconds");
@@ -117,7 +117,7 @@ void loop(void) {
       duration = 2000;
       direction = 0;
       brake = true; // hard stop
-      otimedspin(magnitude, duration, brake, mLeft, mRight, mBack);
+      otimedspin(direction, magnitude, duration, brake, mLeft, mRight, mBack);
     }
     // odrive(magnitude, duration, brake, mLeft, mRight, mBack);
 

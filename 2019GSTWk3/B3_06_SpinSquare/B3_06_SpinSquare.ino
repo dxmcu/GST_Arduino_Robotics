@@ -19,7 +19,6 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Constants
 const byte TESTSPEED = 155;
-const byte DIRECTION = TURNLEFT;
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -41,7 +40,7 @@ void loop(void){
 
   // Autonomous loop for driving in a square
   for ( byte leg = 1; leg <= 4; leg++ ) {
-    drive(10., TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
+    drive(10., TESTSPEED, motorLeft, motorRight);// Forward for 10 whatevers
     spin(-90., TESTSPEED, motorLeft, motorRight); // 90 deg. to left
     allStop(FORWARD, motorLeft, motorRight);
     delay(500);  // Pause for 1/2 a second after turning

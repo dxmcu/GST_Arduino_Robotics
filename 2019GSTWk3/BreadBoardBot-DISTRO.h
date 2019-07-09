@@ -14,14 +14,12 @@ July 7, 2019 DLE Added omniwheel versions of drive (odrive), spin (ospinturn),
 	and a timed spin (otimedspin)
 */
 
-
 #include <Adafruit_MotorShield.h>
 
-#define TURNLEFT 0
-#define TURNRIGHT 1
-
-const float tireDiam = 2.75;   // inches.  N.B. The units here determine units
-const float trackWidth = 10.0; // inches      used everywhere for distance
+#const float tireDiam = 2.75;  // N.B. The units here determine units
+const float trackWidth = 10.0; // used everywhere for distance
+const float SLOPE = 0.1992;
+const float INTERCEPT = +3.014; // Double check the sign!
 
 void allStop(int oldDirection, 	Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
 {
@@ -61,7 +59,7 @@ void spinStop(int angle, 	Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight) {
 float duration_per_distance( float distance, byte speed) {
 	/* Find drive time in milliseconds from relationship developed from
 	observations of distance/time for a speed.  */
-	float dist_per_sec = (0.1294 * float(speed)) - 1.457;// in inches, from data
+	float dist_per_sec = (SLOPE * float(speed)) + INTERCEPT;// in whatever units used, from data
 	float duration = abs(distance) / dist_per_sec;    // needed time in sec
 	return duration * 1000.0 ;                        // Return in milliseconds
 }
@@ -110,6 +108,8 @@ void spin(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *
 		mLeft->run(BACKWARD);
 	}
 	delay(duration);
+	mLeft->run(RELEASE);
+	mRight->run(RELEASE);
 	return;
 }
 
@@ -137,6 +137,8 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 		mLeft->run(RELEASE);
 	}
 	delay(duration);
+	mLeft->run(RELEASE);
+	mRight->run(RELEASE);
 	return;
 }
 
@@ -212,7 +214,7 @@ void odrive(float direction, byte magnitude, long duration, bool brake, Adafruit
 	}
 }
 
-void ospinturn(byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
+void ospinturn(float direction, byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
 	/* Function omnispin spins the robot clockwise for a positive magnitude, and
 	counterclockwise for a negative magnitude.
 	*/
@@ -273,7 +275,7 @@ void ospinturn(byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLe
 	}
 }
 
-void otimedspin(byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
+void otimedspin(float direction, byte magnitude, float duration, bool brake, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack) {
 	/* Function omnispin spins the robot clockwise for a positive magnitude, and
 	counterclockwise for a negative magnitude.
 	*/
