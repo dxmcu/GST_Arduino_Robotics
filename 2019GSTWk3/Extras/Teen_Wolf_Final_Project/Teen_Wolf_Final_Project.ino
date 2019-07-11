@@ -2,8 +2,11 @@
   Melody:
   Plays Teen Wolf Theme Song
   circuit:
-   6-ohm speaker on digital pin 6
+   6-ohm speaker on digital pin TONE_PIN = 16
   http://www.arduino.cc/en/Tutorial/Tone
+
+  July 10, 2019: Copied and modified for GoSciTech Arduino Robotics
+     -- Changed origianl hard-coded pin 8 to TONE_PIN: Dave Eslinger
 
 */
 #include "pitches.h"
@@ -15,7 +18,7 @@
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
-
+const byte TONE_PIN = 14;
 
 const byte LEFT_BUMP_PIN = 47;
 const byte RIGHT_BUMP_PIN = 46;
@@ -104,14 +107,14 @@ void setup() {
     // divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/6, etc.
     int noteDuration = 1000 / noteDurations[thisNOTE];
-    tone(8, melody[thisNOTE], noteDuration);
+    tone(TONE_PIN, melody[thisNOTE], noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
     int pauseBetweenNOTEs = noteDuration * 1.30;
     delay(pauseBetweenNOTEs);
     // stop the tone playing:
-    noTone(8);
+    noTone(TONE_PIN);
   }
 
   Serial.println("Ready to calibrate");

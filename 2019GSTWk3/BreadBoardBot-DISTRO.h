@@ -16,10 +16,17 @@ July 7, 2019 DLE Added omniwheel versions of drive (odrive), spin (ospinturn),
 
 #include <Adafruit_MotorShield.h>
 
-#const float tireDiam = 2.75;  // N.B. The units here determine units
-const float trackWidth = 10.0; // used everywhere for distance
-const float SLOPE = 0.1992;
+//=================================================================================
+/* The units here determine units used everywhere for distance!
+   Use either inches or centimeters, but remember that all subsequent calls to
+   BreadBoardBot.h functions that use distanc will be in those units.
+*/
+const float trackWidth = 10.0;  // DIstance between part of tire that is on the ground
+ 
+const float SLOPE = 0.1992;     // From regression equation with data from DriveTest.ino
 const float INTERCEPT = +3.014; // Double check the sign!
+//===============================================================================
+
 
 void allStop(int oldDirection, 	Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
 {
