@@ -22,7 +22,7 @@ July 7, 2019 DLE Added omniwheel versions of drive (odrive), spin (ospinturn),
    BreadBoardBot.h functions that use distanc will be in those units.
 */
 const float trackWidth = 10.0;  // DIstance between part of tire that is on the ground
- 
+
 const float SLOPE = 0.1992;     // From regression equation with data from DriveTest.ino
 const float INTERCEPT = +3.014; // Double check the sign!
 //===============================================================================
@@ -226,6 +226,8 @@ void ospinturn(float direction, byte magnitude, float duration, bool brake, Adaf
 	counterclockwise for a negative magnitude.
 	*/
 	if ( duration > 0 ) {
+		Serial.print("direction = ");
+		Serial.print(direction);
 		Serial.print(", magnitude = ");
 		Serial.print(magnitude);
 		Serial.print(" and duration = ");
@@ -257,9 +259,9 @@ void ospinturn(float direction, byte magnitude, float duration, bool brake, Adaf
 			*/
 			// We can use a trinary operator to set direction within run call
 
-			mBack-> run((backSpeed  > 0) ? FORWARD : BACKWARD );
-			mLeft-> run((backSpeed  > 0) ? BACKWARD : FORWARD );
-			mRight->run((backSpeed > 0) ? FORWARD : BACKWARD );
+			mLeft-> run((direction  > 0) ? FORWARD : BACKWARD  );
+			mRight->run((direction > 0) ? BACKWARD : FORWARD );
+			mBack-> run((direction  > 0) ? FORWARD : BACKWARD );
 
 			//Print out motor control details
 			Serial.print("Speeds Back,Left,Right = ");
@@ -287,10 +289,37 @@ void otimedspin(float direction, byte magnitude, float duration, bool brake, Ada
 	counterclockwise for a negative magnitude.
 	*/
 	if ( duration > 0 ) {
+		Serial.print("direction = ");
+		Serial.print(direction);
 		Serial.print(", magnitude = ");
 		Serial.print(magnitude);
 		Serial.print(" and duration = ");
 		Serial.println(duration);
+
+		byte backSpeed  = abs(magnitude);
+		byte leftSpeed  = backSpeed;
+		byte rightSpeed = backSpeed;
+
+		// Set the speeds
+		mBack-> setSpeed(backSpeed);
+		mLeft-> setSpeed(leftSpeed);
+		mRight->setSpeed(rightSpeed);
+
+		/* Set Motor directions.  For Adafruit V2 Motorshield:
+		1 is Clockwise (Positive motor direction, FORWARD)
+		2 is Counterclockwise (Negative vector direction, BACKWARD)
+		3 is Brake (Doesn't work at present)
+		4 is Release = stop power, not driving, but not brake
+		*/
+		// We can use a trinary operator to set direction within run call
+
+		mBack-> run((direction  > 0) ? FORWARD : BACKWARD );
+		mLeft-> run((direction  > 0) ? FORWARD : BACKWARD );
+		mRight->run((direction > 0) ? BACKWARD : FORWARD  );
+
+		//Print out motor control details
+		Serial.print("Speeds Back,Left,Right = ");
+			Serial.print(backSpeed);
 
 		if (brake) {            // Not a real brake, but set power = 0, stop driving motors
 			mBack->setSpeed(0);
@@ -300,33 +329,6 @@ void otimedspin(float direction, byte magnitude, float duration, bool brake, Ada
 			mLeft-> run(RELEASE);
 			mRight->run(RELEASE);
 		}
-		else {
-			byte backSpeed  = abs(magnitude);
-			byte leftSpeed  = backSpeed;
-			byte rightSpeed = backSpeed;
-
-			// Set the speeds
-			mBack-> setSpeed(backSpeed);
-			mLeft-> setSpeed(leftSpeed);
-			mRight->setSpeed(rightSpeed);
-
-			/* Set Motor directions.  For Adafruit V2 Motorshield:
-			1 is Clockwise (Positive motor direction, FORWARD)
-			2 is Counterclockwise (Negative vector direction, BACKWARD)
-			3 is Brake (Doesn't work at present)
-			4 is Release = stop power, not driving, but not brake
-			*/
-			// We can use a trinary operator to set direction within run call
-
-			mBack-> run((backSpeed  > 0) ? FORWARD : BACKWARD );
-			mLeft-> run((backSpeed  > 0) ? BACKWARD : FORWARD );
-			mRight->run((backSpeed > 0) ? FORWARD : BACKWARD );
-
-			//Print out motor control details
-			Serial.print("Speeds Back,Left,Right = ");
-			Serial.print(backSpeed);
-		} // end of no brake
-
 		// Run motors for the duration needed, duration is in milliseconds
 		delay(duration);
 	} // end of duration > 0

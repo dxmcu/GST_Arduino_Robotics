@@ -70,8 +70,8 @@ void loop(void) {
   /* }  */
 
   // loop for driving an arbitrary pattern
-  for ( byte leg = 1; leg < 9; leg++ ) {
-    duration = 1000;              // Constants per leg: One second/leg
+  for ( byte leg = 1; leg < 7; leg++ ) {
+    duration = 2000;              // Constants per leg: One second/leg
     magnitude = 150;              //                    50% max power
     bool brake = false;           //                    No braking
     switch (leg) {
@@ -82,7 +82,7 @@ void loop(void) {
       break;
       case 2: // Move forward 45 degrees left
       Serial.println("Forward 45 degrees left");
-      direction = 90.;
+      direction = -45.;
       odrive(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 3: // Move backward
@@ -100,7 +100,7 @@ void loop(void) {
       magnitude = 120;
       duration = 2000;
       direction = 10;
-      brake = true; // hard stop
+      //brake = true; // hard stop
       otimedspin(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       case 6: // Spin counterclockwise for 2 seconds
@@ -108,7 +108,7 @@ void loop(void) {
       magnitude = 120;
       duration = 2000;
       direction = -10;
-      brake = true; // hard stop
+      //brake = true; // hard stop
       otimedspin(direction, magnitude, duration, brake, mLeft, mRight, mBack);
       break;
       default: // Stop and pause for 2 seconds
